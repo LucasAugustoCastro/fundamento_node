@@ -57,4 +57,23 @@ accountRoute.post('/withdraw', (request, response) => {
   return response.status(201).send();
 })
 
+accountRoute.get('/statement/date', (request, response) => {
+  const {customer } = request;
+  const {date} = request.query;
+
+  const dateFormat = new Date(date + " 00:00");
+
+  const statement = customer.statement.filter((statement) => 
+    statement.created_at.toDateString() === new Date(dateFormat).toDateString());
+
+  return response.json(statement);
+})
+
+accountRoute.get('/balance', (request, response) => {
+  const {customer} = request;
+
+  const balance = getBalance(customer.statement);
+  return response.json(balance);
+})
+
 module.exports = accountRoute;
